@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "tempo-agentic-negotiator"
-version = "0.1.0"
-description = "Agentic OTC block trading with Vellum negotiation engine + Tempo settlement"
+version = "0.2.0"
+description = "Agentic OTC block trading with Vellum negotiation engine + MPP settlement on Tempo"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
@@ -13,6 +13,9 @@ dependencies = [
     "fastapi>=0.115",
     "uvicorn[standard]>=0.34",
     "sse-starlette>=2.0",
+    "python-dotenv>=1.0",
+    "pympp>=0.5",
+    "pytempo>=0.4",
     "vellum @ file:./vellum",
 ]
 

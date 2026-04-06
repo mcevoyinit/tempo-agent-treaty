@@ -429,7 +429,7 @@ export function DemoPage() {
                 fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase',
                 color: phase === 'done' ? 'var(--lime)' : 'var(--amber)',
               }}>
-                {phase === 'settling' ? 'Submitting to Tempo chain...' : 'Settled — atomic swap confirmed'}
+                {phase === 'settling' ? 'MPP settlement on Tempo chain...' : 'Settled via MPP — atomic swap confirmed'}
               </span>
               {phase === 'done' && result && (
                 <span style={{ fontSize: 10, color: 'var(--text-muted)', marginLeft: 'auto' }}>
@@ -480,7 +480,7 @@ export function DemoPage() {
         }}>
           BUILT WITH <span style={{ color: 'var(--teal)' }}>VELLUM</span> NEGOTIATION ENGINE
           &ensp;&middot;&ensp;
-          SETTLES ON <span style={{ color: 'var(--lime)' }}>TEMPO</span> CHAIN
+          SETTLES VIA <span style={{ color: 'var(--lime)' }}>MPP</span> ON <span style={{ color: 'var(--lime)' }}>TEMPO</span> CHAIN
         </footer>
       </div>
     </div>

@@ -202,6 +202,8 @@ class TestSettlementAPI:
         async with AsyncClient(transport=transport, base_url="http://test") as c:
             app.state.orchestrator = create_otc_orchestrator()
             app.state.trade_store = {}
+            app.state.settlement_bridge = MockSettlementBridge(settlement_delay=0)
+            app.state.mpp_mode = "mock"
             yield c
 
     async def _create_trade(self, client) -> str:
@@ -227,7 +229,7 @@ class TestSettlementAPI:
         data = r.json()
         assert data["success"]
         assert data["escrow_amount"] == 52500.0
-        assert data["funding_tx_hash"].startswith("0x")
+        assert data["mpp_mode"] == "mock"
 
         # Trade should be SETTLING
         r = await client.get(f"/api/trades/{trade_id}")
@@ -268,18 +270,19 @@ class TestSettlementAPI:
     async def test_settlement_status(self, client):
         trade_id = await self._create_trade(client)
 
-        # Before any escrow
+        # Before settlement
         r = await client.get(f"/api/settlement/status/{trade_id}")
         assert r.status_code == 200
-        assert r.json()["escrow"]["status"] == "NOT_FUNDED"
+        assert r.json()["trade_status"] == "INDICATION"
+        assert r.json()["mpp_mode"] == "mock"
 
-        # After funding
+        # After funding escrow
         await client.post(f"/api/settlement/escrow/{trade_id}", json={
             "trade_notional": 105000.0,
             "escrow_pct": 100.0,
         })
         r = await client.get(f"/api/settlement/status/{trade_id}")
-        assert r.json()["escrow"]["status"] == "FUNDED"
+        assert r.json()["trade_status"] == "SETTLING"
 
     @pytest.mark.asyncio
     async def test_submit_without_agreement_fails(self, client):
